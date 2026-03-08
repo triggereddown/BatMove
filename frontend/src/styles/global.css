@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { 
+    @apply scroll-smooth;
+    scrollbar-width: thin; 
+    scrollbar-color: #333 #0a0a0f; 
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a0a0f; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  
+  body { 
+    @apply font-body bg-bgPrimary text-textPrimary antialiased overflow-x-hidden; 
+  }
+}
+
+@layer utilities {
+  .skeleton-shimmer {
+    background: linear-gradient(90deg, #16161e 25%, #1e1e2a 50%, #16161e 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+@layer components {
+  /* Reusable Buttons */
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-full font-semibold text-[0.95rem] transition-all duration-250 whitespace-nowrap;
+  }
+  .btn-base {
+    @apply px-6 py-[0.65rem];
+  }
+  .btn-sm {
+    @apply px-[0.9rem] py-[0.4rem] text-sm;
+  }
+  .btn-lg {
+    @apply px-8 py-[0.85rem] text-[1.05rem];
+  }
+  .btn-primary {
+    @apply bg-accentPrimary text-white hover:bg-accentHover hover:-translate-y-[1px] hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply border border-borderLayer text-textPrimary bg-glass backdrop-blur-md hover:border-textSecondary hover:bg-white/10;
+  }
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700;
+  }
+  .btn-warning {
+    @apply bg-amber-600 text-white hover:bg-amber-700;
+  }
+  .btn-success {
+    @apply bg-emerald-500 text-white hover:bg-emerald-600;
+  }
+  .btn-favorited {
+    @apply bg-accentPrimary text-white shadow-glow;
+  }
+
+  /* Form Elements */
+  .form-group {
+    @apply flex flex-col gap-1.5;
+  }
+  .form-label {
+    @apply text-sm text-textSecondary flex items-center gap-1.5 font-medium;
+  }
+  .form-input {
+    @apply bg-bgSecondary border border-borderLayer rounded-md px-4 py-3 text-textPrimary text-[0.95rem] outline-none transition-all duration-250 focus:border-accentPrimary focus:ring-[3px] focus:ring-accentPrimary/15;
+  }
+  .form-input-error {
+    @apply border-red-600;
+  }
+  .form-error {
+    @apply text-red-500 text-sm;
+  }
+
+  /* Shared Page Containers */
+  .page-container {
+    @apply px-[4%] py-8 max-w-[1440px] mx-auto w-full animate-fade-in;
+  }
+  .section-title {
+    @apply font-heading text-2xl tracking-[0.15em] uppercase border-l-4 border-accentPrimary pl-3 mb-5;
+  }
+}
