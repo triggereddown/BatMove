@@ -37,20 +37,33 @@ const WatchHistory = () => {
 
   return (
     <div className="page-container" id="history-page">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pt-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pt-4" data-reveal="true">
         <div>
-          <h1 className="font-heading text-4xl md:text-5xl tracking-wide mb-2 flex items-center gap-3"><FiClock className="text-accentSecondary" /> Watch History</h1>
-          <p className="text-textSecondary text-lg">Your recently viewed movies and shows</p>
+          <h1 className="relative mb-3 font-heading text-4xl md:text-5xl tracking-[0.05em] uppercase text-textPrimary group/header flex items-center overflow-hidden">
+            <FiClock className="text-accentSecondary mr-4" />
+            <span className="inline-flex">
+              {'WATCH HISTORY'.split('').map((char, i) => (
+                <span 
+                  key={i} 
+                  className="inline-block opacity-0 reveal-char"
+                  style={{ animationDelay: `${0.1 + (i * 0.05)}s` }}
+                >
+                  {char === ' ' ? '\u00A0' : char}
+                </span>
+              ))}
+            </span>
+          </h1>
+          <p className="text-textSecondary text-lg opacity-0 animate-[heroFadeIn_0.8s_ease_0.3s_forwards]">Your recently viewed movies and shows</p>
         </div>
         {items.length > 0 && (
-          <button className="btn btn-danger btn-sm" onClick={handleClearAll}>
+          <button className="btn btn-danger btn-sm opacity-0 animate-[heroFadeIn_0.6s_ease_0.6s_forwards]" onClick={handleClearAll}>
             <FiTrash /> Clear All
           </button>
         )}
       </div>
 
       {items.length === 0 ? (
-        <div className="text-center py-20 px-8 text-textMuted flex flex-col items-center">
+        <div className="text-center py-20 px-8 text-textMuted flex flex-col items-center opacity-0 animate-[heroFadeIn_0.8s_ease_0.5s_forwards]">
           <FiClock size={64} className="mb-6 opacity-30 text-accentSecondary" />
           <h3 className="font-heading text-2xl text-textSecondary mb-2">No watch history yet</h3>
           <p className="mb-6">Movies and shows you view will appear here.</p>
@@ -60,8 +73,12 @@ const WatchHistory = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {items.map((item) => (
-            <div key={item._id} className="flex items-center justify-between bg-bgCard border border-borderLayer rounded-xl p-3 transition-colors hover:border-white/10 group">
+          {items.map((item, index) => (
+            <div 
+              key={item._id} 
+              className="flex items-center justify-between bg-bgCard border border-borderLayer rounded-xl p-3 transition-colors hover:bg-white/5 opacity-0 animate-[adminRowSlideUp_0.5s_cubic-bezier(0.34,1.56,0.64,1)_forwards] hover:border-textSecondary/30 group"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
               <div className="flex items-center gap-4 cursor-pointer flex-1" onClick={() => handleItemClick(item)}>
                 <img
                   src={getImageUrl(item.posterPath)}
@@ -97,6 +114,22 @@ const WatchHistory = () => {
           ))}
         </div>
       )}
+
+      <style>{`
+        [data-reveal].revealed .reveal-char { animation: charsReveal 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
+        @keyframes charsReveal {
+          from { clip-path: inset(0 100% 0 0); opacity: 0; transform: translateX(-10px); }
+          to { clip-path: inset(0 0% 0 0); opacity: 1; transform: translateX(0); }
+        }
+        @keyframes heroFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes adminRowSlideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };

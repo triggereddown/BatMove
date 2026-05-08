@@ -6,6 +6,7 @@ import { fetchTrending, fetchPopular, fetchTopRated, fetchUpcoming, fetchTVShows
 import HeroSection from '../components/common/HeroSection';
 import MovieCard from '../components/common/MovieCard';
 import SkeletonCard from '../components/common/SkeletonCard';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const ScrollSection = ({ title, data, loading, seeAllLink, mediaType = 'movie' }) => {
   const scrollRef = useRef(null);
@@ -18,12 +19,28 @@ const ScrollSection = ({ title, data, loading, seeAllLink, mediaType = 'movie' }
   };
 
   return (
-    <section className="mb-12">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="section-title mb-0">{title}</h2>
+    <section className="mb-14" data-reveal="true">
+      <div className="flex justify-between items-end mb-6">
+        <h2 className="relative mb-0 font-heading text-2xl tracking-[0.15em] uppercase text-textPrimary group/header flex items-center overflow-hidden">
+          {/* Decorative animated line */}
+          <span className="w-1 h-8 bg-accentPrimary mr-4 rounded-sm transform origin-bottom transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] scale-y-0 group-hover/header:scale-y-100 reveal-line" />
+          
+          <span className="inline-flex">
+            {title.split('').map((char, i) => (
+              <span 
+                key={i} 
+                className="inline-block opacity-0 reveal-char"
+                style={{ animationDelay: `${0.1 + (i * 0.03)}s` }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </span>
+            ))}
+          </span>
+        </h2>
         {seeAllLink && (
-          <Link to={seeAllLink} className="text-accentPrimary font-semibold flex items-center gap-1 hover:text-[#ff2d38] transition-colors">
-            See All <FiChevronRight />
+          <Link to={seeAllLink} className="text-accentPrimary font-semibold flex items-center gap-1 group/link transition-colors hover:text-accentSecondary text-sm md:text-base">
+            See All 
+            <FiChevronRight className="transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover/link:translate-x-1.5 group-hover/link:scale-110" />
           </Link>
         )}
       </div>
@@ -42,6 +59,12 @@ const ScrollSection = ({ title, data, loading, seeAllLink, mediaType = 'movie' }
         >
           {loading ? (
             Array.from({ length: 7 }).map((_, i) => <div key={i} className="snap-start shrink-0 w-[180px]"><SkeletonCard /></div>)
+          ) : data.length === 0 ? (
+            <div className="w-full h-[270px] rounded-xl flex items-center justify-center bg-bgSecondary border border-borderLayer text-textSecondary flex-col gap-3">
+              <span className="text-3xl opacity-50">📡</span>
+              <p className="font-medium">Failed to load {title.split(' ')[1]}</p>
+              <p className="text-sm opacity-60">Check your API connection</p>
+            </div>
           ) : (
             data.map((movie) => (
               <div key={movie.id} className="snap-start shrink-0 w-[180px]">
@@ -58,6 +81,18 @@ const ScrollSection = ({ title, data, loading, seeAllLink, mediaType = 'movie' }
           <FiChevronRight size={20} />
         </button>
       </div>
+      <style>{`
+        [data-reveal].revealed .reveal-line {
+          transform: scaleY(1);
+        }
+        [data-reveal].revealed .reveal-char {
+          animation: charsReveal 0.6s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+        @keyframes charsReveal {
+          from { clip-path: inset(0 100% 0 0); opacity: 0; transform: translateX(-10px); }
+          to { clip-path: inset(0 0% 0 0); opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
     </section>
   );
 };
@@ -65,6 +100,8 @@ const ScrollSection = ({ title, data, loading, seeAllLink, mediaType = 'movie' }
 const Home = () => {
   const dispatch = useDispatch();
   const { trending, popular, topRated, upcoming, tvShows, loading } = useSelector((state) => state.movies);
+
+  useScrollReveal([trending, popular, topRated, upcoming, tvShows]);
 
   useEffect(() => {
     dispatch(fetchTrending());

@@ -9,6 +9,9 @@ import { fetchFavorites } from './features/favorites/favoritesSlice';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import AdminSidebar from './components/admin/AdminSidebar';
+import { PageTransition } from './components/common/PageTransition';
+import { ThemeRipple } from './components/common/ThemeRipple';
+import { CustomCursor } from './components/common/CustomCursor';
 
 // Protected routes
 import { ProtectedRoute, AdminRoute } from './components/common/ProtectedRoute';
@@ -68,6 +71,8 @@ const App = () => {
   return (
     <Router>
       <ScrollToTop />
+      <ThemeRipple />
+      <CustomCursor />
       <Toaster
         position="top-right"
         toastOptions={{
@@ -94,18 +99,20 @@ const App = () => {
           <div className="flex flex-col min-h-screen bg-bgPrimary text-textPrimary font-body">
             <Navbar />
             <main className="flex-1 pt-[70px]">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/movies" element={<Movies />} />
-                <Route path="/tv" element={<TVShows />} />
-                <Route path="/movie/:id" element={<MovieDetail mediaType="movie" />} />
-                <Route path="/tv/:id" element={<MovieDetail mediaType="tv" />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
-                <Route path="/history" element={<ProtectedRoute><WatchHistory /></ProtectedRoute>} />
-              </Routes>
+              <PageTransition>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/movies" element={<Movies />} />
+                  <Route path="/tv" element={<TVShows />} />
+                  <Route path="/movie/:id" element={<MovieDetail mediaType="movie" />} />
+                  <Route path="/tv/:id" element={<MovieDetail mediaType="tv" />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+                  <Route path="/history" element={<ProtectedRoute><WatchHistory /></ProtectedRoute>} />
+                </Routes>
+              </PageTransition>
             </main>
             <Footer />
           </div>

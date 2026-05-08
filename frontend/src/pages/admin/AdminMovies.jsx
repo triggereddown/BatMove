@@ -46,7 +46,7 @@ const AdminMovies = () => {
   return (
     <div className="w-full max-w-[1100px] mx-auto animate-fade-in" id="admin-movies">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pt-2">
-        <div>
+        <div className="opacity-0 animate-[heroFadeIn_0.6s_ease_forwards]">
           <h1 className="font-heading text-4xl tracking-wide mb-1">Movies</h1>
           <p className="text-textSecondary">Manage your movie catalog</p>
         </div>
@@ -68,8 +68,12 @@ const AdminMovies = () => {
             </tr>
           </thead>
           <tbody>
-            {movies.map((movie) => (
-              <tr key={movie._id} className="border-b border-borderLayer hover:bg-white/5 transition-colors">
+            {movies.map((movie, index) => (
+              <tr 
+                key={movie._id} 
+                className="border-b border-borderLayer hover:bg-white/5 transition-colors opacity-0 animate-[adminRowSlideUp_0.5s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
                 <td className="px-4 py-3">
                   <img
                     src={movie.posterUrl || '/placeholder.jpg'}
@@ -135,6 +139,17 @@ const AdminMovies = () => {
           </button>
         </div>
       )}
+      
+      <style>{`
+        @keyframes adminRowSlideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heroFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 };

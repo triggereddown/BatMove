@@ -28,8 +28,12 @@ const UserTable = ({ users, onToggleBan, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user._id} className={`border-b border-borderLayer hover:bg-white/5 transition-colors ${user.isBanned ? 'opacity-60' : ''}`}>
+          {users.map((user, index) => (
+            <tr 
+              key={user._id} 
+              className={`border-b border-borderLayer hover:bg-white/5 transition-colors opacity-0 animate-[adminRowSlideUp_0.5s_cubic-bezier(0.34,1.56,0.64,1)_forwards] ${user.isBanned ? 'opacity-60 grayscale-[0.5]' : ''}`}
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
               <td className="px-4 py-3">
                 <div className="w-9 h-9 flex items-center justify-center rounded-full overflow-hidden bg-bgSecondary">
                   {user.avatar ? (
@@ -56,13 +60,17 @@ const UserTable = ({ users, onToggleBan, onDelete }) => {
               </td>
               <td className="px-4 py-3">
                 {user.role !== 'admin' && (
-                  <div className="flex gap-2">
+                  <div className="flex gap-4 items-center">
+                    {/* Cubic-bezier Switch Toggle */}
                     <button
-                      className={`btn btn-sm ${user.isBanned ? 'btn-success' : 'btn-warning'}`}
+                      className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none ${user.isBanned ? 'bg-red-500/80 shadow-[0_0_10px_rgba(239,68,68,0.4)]' : 'bg-green-500/60 shadow-[0_0_10px_rgba(34,197,94,0.2)]'}`}
                       onClick={() => onToggleBan(user._id)}
                       title={user.isBanned ? 'Unban user' : 'Ban user'}
                     >
-                      {user.isBanned ? <FiCheckCircle /> : <FiSlash />}
+                      <span className="sr-only">Toggle Ban Status</span>
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${user.isBanned ? 'translate-x-[26px]' : 'translate-x-1'}`}
+                      />
                     </button>
                     <button
                       className={`btn btn-sm ${confirmDelete === user._id ? 'bg-red-600 animate-pulse-fast text-white' : 'btn-danger'}`}
@@ -83,6 +91,13 @@ const UserTable = ({ users, onToggleBan, onDelete }) => {
       {users.length === 0 && (
         <div className="p-8 text-center text-textMuted">No users found.</div>
       )}
+
+      <style>{`
+        @keyframes adminRowSlideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };
